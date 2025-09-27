@@ -3,15 +3,24 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { X, Sparkles, RefreshCw, Lightbulb, PenTool } from 'lucide-react';
+import { useAI } from '@/hooks/useAI';
+import { toast } from 'sonner';
 
 interface AIAssistantProps {
   onClose: () => void;
+  selectedText?: string;
+  onInsertText?: (text: string) => void;
 }
 
-export const AIAssistant = ({ onClose }: AIAssistantProps) => {
-  const [selectedText, setSelectedText] = useState('');
+export const AIAssistant = ({ onClose, selectedText = '', onInsertText }: AIAssistantProps) => {
   const [prompt, setPrompt] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const {
+    isProcessing,
+    continueWriting,
+    rewriteText,
+    brainstormIdeas,
+    customRequest
+  } = useAI();
 
   const aiTools = [
     {
@@ -19,32 +28,68 @@ export const AIAssistant = ({ onClose }: AIAssistantProps) => {
       name: 'Continue Writing',
       description: 'AI continues your story naturally',
       icon: PenTool,
-      action: () => console.log('Continue writing'),
+      action: () => handleContinueWriting(),
     },
     {
       id: 'rewrite',
       name: 'Rewrite',
       description: 'Improve selected text',
       icon: RefreshCw,
-      action: () => console.log('Rewrite'),
+      action: () => handleRewrite(),
     },
     {
       id: 'brainstorm',
       name: 'Brainstorm',
       description: 'Generate creative ideas',
       icon: Lightbulb,
-      action: () => console.log('Brainstorm'),
+      action: () => handleBrainstorm(),
     },
   ];
 
+  const handleContinueWriting = async () => {
+    if (!selectedText) {
+      toast.error('Please select some text to continue from');
+      return;
+    }
+
+    const response = await continueWriting(selectedText);
+    if (response && onInsertText) {
+      onInsertText(response.content);
+      toast.success('Content generated successfully!');
+    }
+  };
+
+  const handleRewrite = async () => {
+    if (!selectedText) {
+      toast.error('Please select some text to rewrite');
+      return;
+    }
+
+    const response = await rewriteText(selectedText);
+    if (response && onInsertText) {
+      onInsertText(response.content);
+      toast.success('Text rewritten successfully!');
+    }
+  };
+
+  const handleBrainstorm = async () => {
+    const topic = selectedText || 'story ideas';
+    const response = await brainstormIdeas(topic);
+    if (response && onInsertText) {
+      onInsertText(response.content);
+      toast.success('Ideas generated successfully!');
+    }
+  };
+
   const handleCustomPrompt = async () => {
     if (!prompt.trim()) return;
-    
-    setIsProcessing(true);
-    // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setPrompt('');
+
+    const response = await customRequest(prompt);
+    if (response && onInsertText) {
+      onInsertText(response.content);
+      toast.success('Response generated successfully!');
+      setPrompt('');
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
-import Editor from "@/pages/Editor";
+import { AppLayout } from '@/components/layout/AppLayout';
 
 export default function Page() {
-  return <Editor />;
+  return <AppLayout />;
 }

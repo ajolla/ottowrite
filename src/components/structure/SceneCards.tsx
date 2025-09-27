@@ -33,7 +33,7 @@ export const SceneCards = ({
     .filter(scene => selectedAct === 'all' || scene.act === selectedAct)
     .sort((a, b) => a.order - b.order);
 
-  const acts = [...new Set(scenes.map(scene => scene.act).filter(Boolean))].sort();
+  const acts = Array.from(new Set(scenes.map(scene => scene.act).filter(Boolean))).sort();
 
   const SceneCardComponent = ({ scene, index }: { scene: SceneCard; index: number }) => (
     <Card className="group hover:shadow-md transition-shadow">

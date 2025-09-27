@@ -155,7 +155,7 @@ export const AdvancedAIAssistant = ({ onClose, selectedText, currentContext }: A
   ];
 
   const getIcon = (iconName: string) => {
-    const icons: { [key: string]: any } = {
+    const icons: { [key: string]: React.ComponentType<{ className?: string }> } = {
       'lightbulb': Lightbulb,
       'zap': Zap,
       'users': Users,

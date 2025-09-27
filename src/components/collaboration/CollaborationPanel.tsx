@@ -74,7 +74,7 @@ export const CollaborationPanel = ({
     }
   };
 
-  const getRoleColor = (role: ProjectMember['role']) => {
+  const getRoleColor = (role: ProjectMember['role']): "default" | "secondary" | "destructive" | "outline" => {
     switch (role) {
       case 'owner': return 'default';
       case 'admin': return 'destructive';
@@ -86,7 +86,7 @@ export const CollaborationPanel = ({
     }
   };
 
-  const getStatusColor = (status: Assignment['status']) => {
+  const getStatusColor = (status: Assignment['status']): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
       case 'completed': return 'default';
       case 'in_progress': return 'secondary';
@@ -143,7 +143,7 @@ export const CollaborationPanel = ({
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Badge variant={getRoleColor(member.role) as any} className="text-xs">
+                      <Badge variant={getRoleColor(member.role)} className="text-xs">
                         <RoleIcon className="h-3 w-3 mr-1" />
                         {member.role}
                       </Badge>
@@ -260,7 +260,7 @@ export const CollaborationPanel = ({
                       {assignment.description}
                     </div>
                   </div>
-                  <Badge variant={getStatusColor(assignment.status) as any} className="text-xs">
+                  <Badge variant={getStatusColor(assignment.status)} className="text-xs">
                     {assignment.status.replace('_', ' ')}
                   </Badge>
                 </div>

@@ -53,7 +53,7 @@ export interface AuditLog {
   ipAddress: string;
   userAgent: string;
   timestamp: Date;
-  metadata: Record<string, any>;
+  metadata: Record<string, string | number | boolean>;
 }
 
 export type AuditAction = 
@@ -97,7 +97,7 @@ export interface ComplianceReport {
     start: Date;
     end: Date;
   };
-  data: Record<string, any>;
+  data: Record<string, string | number | boolean | object>;
   generatedAt: Date;
   downloadUrl?: string;
 }

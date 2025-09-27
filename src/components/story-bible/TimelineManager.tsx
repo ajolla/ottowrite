@@ -59,7 +59,7 @@ export const TimelineManager = ({
     }
   };
 
-  const getImportanceColor = (importance: TimelineEvent['importance']) => {
+  const getImportanceColor = (importance: TimelineEvent['importance']): "default" | "secondary" | "destructive" | "outline" => {
     switch (importance) {
       case 'high':
         return 'destructive';
@@ -171,7 +171,7 @@ export const TimelineManager = ({
                                 {getTypeLabel(event.type)}
                               </Badge>
                               <Badge 
-                                variant={getImportanceColor(event.importance) as any}
+                                variant={getImportanceColor(event.importance)}
                                 className="text-xs"
                               >
                                 {event.importance}

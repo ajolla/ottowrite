@@ -27,7 +27,9 @@ const Home = () => {
           </nav>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="ghost">Sign In</Button>
+            <Link href="/signin">
+              <Button variant="ghost">Sign In</Button>
+            </Link>
             <Link href="/editor">
               <Button>Try Free</Button>
             </Link>
@@ -105,7 +107,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
+      <section id="pricing" className="py-20 px-4">
         <div className="container mx-auto text-center max-w-3xl">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to write your masterpiece?
@@ -123,7 +125,7 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12 px-4">
+      <footer id="about" className="border-t border-border py-12 px-4">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
@@ -131,9 +133,9 @@ const Home = () => {
               <span className="text-xl font-bold">Ottowrite</span>
             </div>
             <div className="flex space-x-8 text-muted-foreground">
-              <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-              <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-              <a href="#" className="hover:text-foreground transition-colors">Support</a>
+              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+              <Link href="/support" className="hover:text-foreground transition-colors">Support</Link>
             </div>
           </div>
           <div className="text-center text-muted-foreground text-sm mt-8">
