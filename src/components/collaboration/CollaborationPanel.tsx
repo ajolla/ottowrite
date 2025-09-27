@@ -242,7 +242,7 @@ export const CollaborationPanel = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Assignments ({assignments.length})</h3>
-        <Button size="sm" onClick={() => {}}>
+        <Button size="sm" onClick={() => onCreateAssignment({})}>
           <FileText className="h-4 w-4 mr-2" />
           New Task
         </Button>

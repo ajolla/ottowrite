@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useWatermarks } from '@/hooks/useWatermarks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,9 +28,15 @@ import { WatermarkSystemManager } from '@/lib/watermark-system';
 import { toast } from 'sonner';
 
 export const WatermarkManager = () => {
-  const [watermarks, setWatermarks] = useState<WatermarkConfig[]>([]);
+  const {
+    watermarks,
+    isLoading,
+    createWatermark,
+    updateWatermark,
+    deleteWatermark,
+    toggleWatermark
+  } = useWatermarks();
   const [selectedWatermark, setSelectedWatermark] = useState<WatermarkConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 

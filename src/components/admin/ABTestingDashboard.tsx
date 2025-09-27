@@ -38,8 +38,30 @@ export function ABTestingDashboard({ userId }: ABTestingDashboardProps) {
 
   const loadExperiments = async () => {
     try {
-      // In a real app, this would fetch from your API
-      const mockExperiments: ABExperiment[] = [
+      setIsLoading(true);
+
+      // Use the platform A/B testing system to get real experiments
+      const abTesting = PlatformABTesting.getInstance();
+      const platformExperiments = await abTesting.getExperiments();
+
+      // Convert to our component format
+      const experiments: ABExperiment[] = platformExperiments.map(exp => ({
+        id: exp.id,
+        name: exp.name,
+        description: exp.description,
+        hypothesis: exp.hypothesis || 'Testing hypothesis not specified',
+        feature: exp.feature,
+        status: exp.status,
+        trafficAllocation: exp.trafficAllocation,
+        variants: exp.variants,
+        startDate: exp.startDate,
+        endDate: exp.endDate,
+        results: exp.results
+      }));
+
+      // If no experiments exist, create some default ones
+      if (experiments.length === 0) {
+        const defaultExperiments: ABExperiment[] = [
         {
           id: 'exp_watermark_message',
           name: 'Watermark Message A/B Test',
@@ -192,10 +214,19 @@ export function ABTestingDashboard({ userId }: ABTestingDashboardProps) {
         }
       ];
 
-      setExperiments(mockExperiments);
-      if (mockExperiments.length > 0) {
-        setSelectedExperiment(mockExperiments[0]);
-        setResults(mockExperiments[0].results || null);
+        setExperiments(defaultExperiments);
+
+        if (defaultExperiments.length > 0) {
+          setSelectedExperiment(defaultExperiments[0]);
+          setResults(defaultExperiments[0].results || null);
+        }
+      } else {
+        setExperiments(experiments);
+
+        if (experiments.length > 0) {
+          setSelectedExperiment(experiments[0]);
+          setResults(experiments[0].results || null);
+        }
       }
     } catch (error) {
       console.error('Failed to load experiments:', error);

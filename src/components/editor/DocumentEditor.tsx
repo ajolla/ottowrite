@@ -1,21 +1,62 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Bold, Italic, Underline } from 'lucide-react';
+import { useDocuments } from '@/hooks/useDocuments';
+import { useProjects } from '@/hooks/useProjects';
 
 interface DocumentEditorProps {
   documentId: string | null;
+  projectId: string | null;
   onToggleAI: () => void;
   showAIAssistant: boolean;
+  onCreateDocument?: () => void;
 }
 
-export const DocumentEditor = ({ documentId, onToggleAI, showAIAssistant }: DocumentEditorProps) => {
+export const DocumentEditor = ({ documentId, projectId, onToggleAI, showAIAssistant, onCreateDocument }: DocumentEditorProps) => {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('Untitled Document');
   const editorRef = useRef<HTMLDivElement>(null);
+  const { documents, updateDocument, autoSave } = useDocuments(projectId);
+  const { createProject } = useProjects();
+
+  // Load document content when documentId changes
+  useEffect(() => {
+    if (documentId && documents.length > 0) {
+      const document = documents.find(d => d.id === documentId);
+      if (document) {
+        setContent(document.content);
+        setTitle(document.title);
+      }
+    }
+  }, [documentId, documents]);
 
   const handleFormat = (command: string) => {
     document.execCommand(command, false);
     editorRef.current?.focus();
+  };
+
+  const handleStartWriting = () => {
+    if (onCreateDocument) {
+      onCreateDocument();
+    }
+  };
+
+  const handleContentChange = (newContent: string) => {
+    setContent(newContent);
+
+    // Auto-save content after user stops typing
+    if (documentId) {
+      autoSave(documentId, newContent);
+    }
+  };
+
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle);
+
+    // Update title in database
+    if (documentId) {
+      updateDocument(documentId, { title: newTitle });
+    }
   };
 
   if (!documentId) {
@@ -31,7 +72,7 @@ export const DocumentEditor = ({ documentId, onToggleAI, showAIAssistant }: Docu
               Your AI-powered creative writing companion. Create a new document or select an existing one to begin your writing journey.
             </p>
           </div>
-          <Button onClick={() => {}} className="min-w-32">
+          <Button onClick={handleStartWriting} className="min-w-32">
             Start Writing
           </Button>
         </div>
@@ -88,7 +129,7 @@ export const DocumentEditor = ({ documentId, onToggleAI, showAIAssistant }: Docu
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => handleTitleChange(e.target.value)}
           className="w-full text-3xl font-semibold bg-transparent border-none outline-none placeholder-muted-foreground"
           placeholder="Document title..."
         />
@@ -105,7 +146,7 @@ export const DocumentEditor = ({ documentId, onToggleAI, showAIAssistant }: Docu
             fontSize: '18px',
             color: 'hsl(var(--foreground))',
           }}
-          onInput={(e) => setContent(e.currentTarget.innerHTML)}
+          onInput={(e) => handleContentChange(e.currentTarget.innerHTML)}
           suppressContentEditableWarning={true}
         >
           <p className="text-muted-foreground">Start writing your story...</p>

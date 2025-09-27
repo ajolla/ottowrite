@@ -42,18 +42,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Cannot downgrade to free tier' }, { status: 400 });
     }
 
-    // In a real application, you would:
-    // 1. Process payment with Stripe/PayPal/etc.
-    // 2. Verify payment token
-    // 3. Handle subscription management
-
-    // For demo purposes, we'll simulate payment processing
-    if (newTier !== 'free' && !paymentToken) {
-      return NextResponse.json({ error: 'Payment token required for paid tiers' }, { status: 400 });
+    // This endpoint is now primarily for free tier management
+    // Paid tier upgrades should go through Stripe checkout
+    if (newTier !== 'free') {
+      return NextResponse.json({
+        error: 'Paid tier upgrades must go through Stripe checkout',
+        redirectTo: '/pricing'
+      }, { status: 400 });
     }
-
-    // Simulate payment processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Update user tier
     const { data: updatedUser, error: updateError } = await supabase

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -409,10 +410,21 @@ export const IntellectualPropertyManager = ({
                   </Button>
                 )}
                 
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="outline"
-                  onClick={() => {}}
+                  onClick={() => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.pdf,.doc,.docx';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        toast.success(`Contract "${file.name}" uploaded successfully`);
+                      }
+                    };
+                    input.click();
+                  }}
                   className="flex-1"
                 >
                   <Upload className="h-4 w-4 mr-2" />
